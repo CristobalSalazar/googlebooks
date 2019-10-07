@@ -1,0 +1,10 @@
+img {
+  margin-bottom: 1rem;
+  margin-right: 1rem;
+  width: min-content;
+  display: inline;
+  float: left;
+}
+.description {
+  float: left;
+}
