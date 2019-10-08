@@ -34,6 +34,12 @@ app.post("/api/books", async (req, res) => {
     link,
     image
   };
+
+  const response = await db.Book.findOne({ link: link });
+  if (response) {
+    res.status(301).send();
+    return;
+  }
   const data = await db.Book.create(book);
   res.json(data);
 });

@@ -1,9 +1,15 @@
 import React, { Component } from "react";
 import BookDisplay from "../bookdisplay";
+var persistentState = { books: [] };
 export default class Saved extends Component {
-  state = {
-    books: []
-  };
+  constructor(props) {
+    super(props);
+    this.state = persistentState;
+  }
+
+  componentWillUnmount() {
+    persistentState = this.state;
+  }
 
   componentDidMount() {
     this.getBooks();
