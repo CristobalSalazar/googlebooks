@@ -3,14 +3,9 @@ import React from "react";
 export default class BookSearch extends React.Component {
   search = async event => {
     event.preventDefault();
-    const val = document.getElementById("bookSearch").value;
-    const res = await fetch("/search", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({ book: val })
-    });
+    let val = document.getElementById("bookSearch").value;
+    val = encodeURIComponent(val);
+    const res = await fetch(`/search?q=${val}`);
     const data = await res.json();
     this.props.search(data);
   };

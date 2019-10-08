@@ -5,11 +5,12 @@ export default class Saved extends Component {
     books: []
   };
 
-  async componentDidMount() {
-    await this.getBooks();
+  componentDidMount() {
+    this.getBooks();
   }
+
   getBooks = async () => {
-    const res = await fetch("/books");
+    const res = await fetch("/api/books");
     const data = await res.json();
     this.setState({ books: data });
   };

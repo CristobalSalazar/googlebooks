@@ -2,16 +2,16 @@ import React, { Component } from "react";
 import BookDisplay from "../bookdisplay";
 import BookSearch from "../booksearch";
 
+var persistentState = {
+  books: []
+};
 export default class Search extends Component {
-  state = {
-    books: []
-  };
-
-  componentWillMount = () => {
-    this.state = JSON.parse(window.localStorage.getItem("searchBooks")) || { books: [] };
-  };
+  constructor(props) {
+    super(props);
+    this.state = persistentState;
+  }
   componentWillUnmount = () => {
-    window.localStorage.setItem("searchBooks", JSON.stringify(this.state));
+    persistentState = this.state;
   };
   search = data => {
     data.items = data.items.map(book => {

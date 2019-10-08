@@ -1,54 +1,54 @@
+require("dotenv").config();
 const express = require("express");
 const path = require("path");
 const app = express();
-const PORT = process.env.PORT || 3001;
-const key = "AIzaSyADwTqNxumDRoOlDZHrpZJoXOvL_iVIufY";
+const key = process.env.API_KEY;
 const axios = require("axios").default;
 const mongoose = require("mongoose");
 const db = require("./models");
 
-mongoose.connect("mongodb://localhost:27017/googlebooks", { useNewUrlParser: true });
+const PORT = process.env.PORT || 3001;
+const MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/googlebooks";
+
+mongoose.connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true });
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+
 if (process.env.NODE_ENV === "production") {
   app.use(express.static("client/build"));
 }
 
-app.get("/api/test", (req, res) => {
-  axios.get();
-  res.send({ test: true });
+// Routes
+app.get("/api/books", async (req, res) => {
+  const response = await db.Book.find({});
+  console.log(response);
+  res.json(response);
 });
 
-app.post("/books", async (req, res) => {
+app.post("/api/books", async (req, res) => {
+  const { title, authors, description, link, image } = req.body;
   const book = {
-    title: req.body.title,
-    authors: req.body.authors,
-    description: req.body.description,
-    link: req.body.link,
-    image: req.body.image
+    title,
+    authors,
+    description,
+    link,
+    image
   };
   const data = await db.Book.create(book);
   res.json(data);
 });
 
-app.delete("/books/:id", async (req, res) => {
+app.delete("/api/books/:id", async (req, res) => {
   const response = await db.Book.deleteOne({ _id: req.params.id });
   res.json(response);
 });
 
-app.get("/books", async (req, res) => {
-  const response = await db.Book.find({});
-  res.json(response);
-});
-
-app.post("/search", async (req, res) => {
-  let q = req.body.book;
-  q = encodeURIComponent(q);
+app.get("/search", async (req, res) => {
+  const q = encodeURIComponent(req.query.q);
   const axiosResponse = await axios.get(
     `https://www.googleapis.com/books/v1/volumes?q=${q}&key=${key}`
   );
-  const data = axiosResponse.data;
-  res.send(data);
+  res.send(axiosResponse.data);
 });
 
 app.get("*", (req, res) => {
@@ -56,5 +56,5 @@ app.get("*", (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log("app listening on port ", PORT);
+  console.log("app listening on port", PORT);
 });

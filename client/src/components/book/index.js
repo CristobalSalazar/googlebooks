@@ -3,7 +3,7 @@ import "./style.css";
 export default class Book extends Component {
   saveBook = async () => {
     const { title, image, authors, description, link } = this.props.book;
-    await fetch("/books", {
+    await fetch("/api/books", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -19,7 +19,7 @@ export default class Book extends Component {
   };
 
   deleteBook = async () => {
-    await fetch(`/books/${this.props.book._id}`, {
+    await fetch(`/api/books/${this.props.book._id}`, {
       method: "DELETE"
     });
     if (this.props.onDelete) this.props.onDelete();
