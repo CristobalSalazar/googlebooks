@@ -1,19 +1,23 @@
-import React, { Component } from "react";
+import React from "react";
+import { Link } from "react-router-dom";
 
-export default class Navbar extends Component {
-  render() {
-    return (
-      <nav className="d-flex navbar navbar-expand-lg navbar-dark bg-dark">
-        <a className="navbar-brand" href="/search">
-          Google Books
-        </a>
-        <a className="ml-3 text-light" href="/search">
+export default function Navbar() {
+  return (
+    <nav
+      style={{ top: 0, boxShadow: "0 0 6px black" }}
+      className="position-fixed w-100 d-flex navbar navbar-expand-lg navbar-dark bg-dark">
+      <Link className="navbar-brand" to="/search">
+        Google Books
+      </Link>
+      <p className="text-light my-auto">Search for and save books of interest.</p>
+      <div className="ml-auto">
+        <Link className="ml-3 text-light" to="/search">
           Search
-        </a>
-        <a className="ml-3 text-light" href="/saved">
+        </Link>
+        <Link className="ml-3 text-light" to="/saved">
           Saved
-        </a>
-      </nav>
-    );
-  }
+        </Link>
+      </div>
+    </nav>
+  );
 }

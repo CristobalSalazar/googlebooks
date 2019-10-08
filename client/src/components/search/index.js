@@ -7,15 +7,35 @@ export default class Search extends Component {
     books: []
   };
 
+  componentWillMount = () => {
+    this.state = JSON.parse(window.localStorage.getItem("searchBooks")) || { books: [] };
+  };
+  componentWillUnmount = () => {
+    window.localStorage.setItem("searchBooks", JSON.stringify(this.state));
+  };
   search = data => {
-    console.log(data.items);
+    data.items = data.items.map(book => {
+      const { title, authors, description, imageLinks, previewLink } = book.volumeInfo;
+      return {
+        title,
+        authors,
+        description,
+        image: imageLinks ? imageLinks.thumbnail : "",
+        link: previewLink
+      };
+    });
     this.setState({ books: data.items });
   };
   render() {
     return (
       <div>
         <BookSearch search={this.search}></BookSearch>
-        <BookDisplay title="Results" books={this.state.books}></BookDisplay>
+        <BookDisplay
+          hideSave={false}
+          hideDelete={true}
+          title="Results"
+          emptyMessage="What would you like to search for?"
+          books={this.state.books}></BookDisplay>
       </div>
     );
   }

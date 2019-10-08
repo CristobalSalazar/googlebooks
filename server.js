@@ -4,7 +4,10 @@ const app = express();
 const PORT = process.env.PORT || 3001;
 const key = "AIzaSyADwTqNxumDRoOlDZHrpZJoXOvL_iVIufY";
 const axios = require("axios").default;
+const mongoose = require("mongoose");
+const db = require("./models");
 
+mongoose.connect("mongodb://localhost:27017/googlebooks", { useNewUrlParser: true });
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 if (process.env.NODE_ENV === "production") {
@@ -14,6 +17,28 @@ if (process.env.NODE_ENV === "production") {
 app.get("/api/test", (req, res) => {
   axios.get();
   res.send({ test: true });
+});
+
+app.post("/books", async (req, res) => {
+  const book = {
+    title: req.body.title,
+    authors: req.body.authors,
+    description: req.body.description,
+    link: req.body.link,
+    image: req.body.image
+  };
+  const data = await db.Book.create(book);
+  res.json(data);
+});
+
+app.delete("/books/:id", async (req, res) => {
+  const response = await db.Book.deleteOne({ _id: req.params.id });
+  res.json(response);
+});
+
+app.get("/books", async (req, res) => {
+  const response = await db.Book.find({});
+  res.json(response);
 });
 
 app.post("/search", async (req, res) => {

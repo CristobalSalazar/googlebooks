@@ -24,7 +24,7 @@ export default class BookSearch extends React.Component {
         <button
           onClick={this.search}
           id="searchButton"
-          className="btn btn-primary rounded ml-auto mt-3"
+          className="btn btn-outline-dark btn-sm rounded ml-auto mt-3"
           type="submit">
           Search
         </button>
